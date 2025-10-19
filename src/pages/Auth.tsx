@@ -122,7 +122,7 @@ const Auth = () => {
           {/* Banner (Windows Home Server style) */}
           <div className="h-20 bg-gradient-to-r from-blue-700 to-blue-500 flex items-center justify-center">
             <img
-              src="/banner.png"
+              src="/banner.jpg"
               alt="Server Banner"
               className="h-12 object-contain drop-shadow-md"
             />
