@@ -26,7 +26,7 @@ export const FileList = ({
     const k = 1024;
     const sizes = ["B", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
   };
 
   const formatDate = (dateString?: string) => {
@@ -35,17 +35,15 @@ export const FileList = ({
   };
 
   const handleItemClick = (item: FileItem, e: React.MouseEvent) => {
-    const isSelected = selectedItems.includes(item.name);
-
     if (e.ctrlKey || e.metaKey) {
-      // Multi-select toggle
-      if (isSelected) {
-        onSelectItems(selectedItems.filter((name) => name !== item.name));
+      // Multi-select
+      if (selectedItems.includes(item.name)) {
+        onSelectItems(selectedItems.filter(name => name !== item.name));
       } else {
         onSelectItems([...selectedItems, item.name]);
       }
     } else {
-      // Single-select / navigate
+      // Single select or navigate
       if (item.type === "directory") {
         const newPath = currentPath === "/" ? `/${item.name}` : `${currentPath}/${item.name}`;
         onNavigate(newPath);
@@ -88,11 +86,9 @@ export const FileList = ({
               return (
                 <tr
                   key={item.name}
-                  className={`
-                    cursor-pointer border-b border-border
-                    transition-colors duration-200
-                    ${isSelected ? "bg-[hsl(var(--win7-selected))]" : "hover:bg-[hsl(var(--win7-hover))]"}
-                  `}
+                  className={`cursor-pointer border-b border-border hover:bg-[hsl(var(--win7-hover))] ${
+                    isSelected ? "bg-[hsl(var(--win7-selected))]" : ""
+                  }`}
                   onClick={(e) => handleItemClick(item, e)}
                 >
                   <td className="px-4 py-2">
@@ -120,7 +116,7 @@ export const FileList = ({
                         variant="ghost"
                         size="sm"
                         onClick={(e) => {
-                          e.stopPropagation(); // prevent toggling row selection
+                          e.stopPropagation();
                           onDownload(item.name);
                         }}
                         className="h-7 px-2"
