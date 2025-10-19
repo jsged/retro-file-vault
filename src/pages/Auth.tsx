@@ -41,7 +41,7 @@ const Auth = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <img src="/background.jpg" alt="Background" className="fixed inset-0 -z-10 h-full w-full object-cover opacity-100" />
+      <img src="/background.png" alt="Background" className="fixed inset-0 -z-10 h-full w-full object-cover opacity-100" />
       {/* Windows 7 Aero Dialog */}
       <div className="w-full max-w-md animate-scale-in">
         {/* Window Chrome */}
