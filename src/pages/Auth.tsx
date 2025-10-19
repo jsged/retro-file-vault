@@ -20,8 +20,8 @@ const Auth = () => {
     const isAuthenticated = sessionStorage.getItem("ftp_authenticated");
     if (isAuthenticated === "true") navigate("/");
 
-    // Center window initially
-    const handleResize = () => {
+    // Center window after mount
+    const centerWindow = () => {
       if (boxRef.current) {
         const { offsetWidth, offsetHeight } = boxRef.current;
         setPosition({
@@ -30,12 +30,11 @@ const Auth = () => {
         });
       }
     };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    centerWindow();
+    window.addEventListener("resize", centerWindow);
+    return () => window.removeEventListener("resize", centerWindow);
   }, [navigate]);
 
-  // Drag handlers
   const handlePointerDown = (e) => {
     setDragging(true);
     offsetRef.current = {
@@ -83,13 +82,13 @@ const Auth = () => {
       {!isMinimized && (
         <div
           ref={boxRef}
-          onPointerDown={(e) => e.stopPropagation()}
           style={{
             transform: `translate(${position.x}px, ${position.y}px)`,
           }}
-          className={`absolute w-full max-w-sm rounded-md bg-white/70 backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.3)] border border-white/30 transition-all ${
+          className={`absolute w-full max-w-sm rounded-md bg-white/75 backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.3)] border border-white/30 transition-all ${
             dragging ? "cursor-grabbing" : "cursor-default"
           }`}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           {/* Title Bar */}
           <div
@@ -118,6 +117,15 @@ const Auth = () => {
                 <X className="h-3 w-3" />
               </button>
             </div>
+          </div>
+
+          {/* Banner (Windows Home Server style) */}
+          <div className="h-20 bg-gradient-to-r from-blue-700 to-blue-500 flex items-center justify-center">
+            <img
+              src="/banner.png"
+              alt="Server Banner"
+              className="h-12 object-contain drop-shadow-md"
+            />
           </div>
 
           {/* Content */}
@@ -181,7 +189,7 @@ const Auth = () => {
         </div>
       )}
 
-      {/* Minimized title bar (bottom dock) */}
+      {/* Minimized Bar */}
       {isMinimized && (
         <div
           className="fixed bottom-3 left-1/2 -translate-x-1/2 w-64 rounded-t-md bg-white/80 border border-gray-300 shadow-md backdrop-blur-sm flex items-center justify-between px-3 py-1 cursor-pointer hover:bg-white transition"
