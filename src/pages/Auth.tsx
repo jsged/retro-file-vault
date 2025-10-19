@@ -98,7 +98,7 @@ const Auth = () => {
             <div className="flex items-center gap-2">
               <Lock className="h-4 w-4 text-blue-600" />
               <span className="text-sm font-semibold text-gray-900">
-                jsged Game FTP Access
+                jsged Game FTP Server Login
               </span>
             </div>
             <div className="flex items-center gap-1">
@@ -135,8 +135,8 @@ const Auth = () => {
             <div className="absolute inset-0 flex items-center justify-center">
               <img
                 src="/banner-logo.png" // this is your overlay (e.g. Windows Home Server logo)
-                alt="Banner Logo"
-                className="h-20 w-auto object-contain drop-shadow-md"
+                alt="Windows Server Logo"
+                className="h-16 w-auto object-contain drop-shadow-md"
               />
             </div>
           </div>
@@ -146,7 +146,7 @@ const Auth = () => {
             <div className="mb-5">
               <h2 className="text-lg font-semibold text-gray-900">Sign in</h2>
               <p className="text-sm text-gray-600">
-                Enter your password to access the FTP File Explorer.
+                Enter the password to access the file server.
               </p>
             </div>
 
