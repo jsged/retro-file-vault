@@ -2,103 +2,125 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* 
+  Design System — Windows 10 style 
+  Flat surfaces, subtle borders, neutral grays, accent blue (#0078D7)
+  All colors use HSL for flexibility.
 */
 
 @layer base {
   :root {
-    /* Windows 7 color scheme */
-    --background: 0 0% 94%;
-    --foreground: 0 0% 15%;
+    /* Light mode — Windows 10 look */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Windows 7 blue accent */
-    --primary: 210 100% 55%;
+    --primary: 210 100% 42%; /* Windows 10 accent blue (#0078D7) */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 15%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 210 100% 55%;
+    --accent: 210 100% 42%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 82%;
+    --border: 0 0% 80%;
     --input: 0 0% 100%;
-    --ring: 210 100% 55%;
+    --ring: 210 100% 42%;
 
-    --radius: 0.125rem;
+    --radius: 0.25rem;
 
-    /* Windows 7 sidebar styling */
+    /* Windows 10 navigation + toolbar */
+    --toolbar: 0 0% 97%;
+    --address-bar: 0 0% 100%;
+    --selected: 210 100% 92%;
+    --hover: 210 100% 96%;
+
+    /* Sidebar */
     --sidebar-background: 0 0% 97%;
-    --sidebar-foreground: 0 0% 15%;
-    --sidebar-primary: 210 100% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 100% 95%;
-    --sidebar-accent-foreground: 0 0% 15%;
-    --sidebar-border: 0 0% 82%;
-    --sidebar-ring: 210 100% 55%;
-
-    /* Windows 7 specific tokens */
-    --win7-toolbar: 0 0% 92%;
-    --win7-address-bar: 0 0% 100%;
-    --win7-selected: 210 100% 92%;
-    --win7-hover: 210 100% 96%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 80%;
+    --sidebar-accent: 210 100% 42%;
+    --sidebar-accent-foreground: 0 0% 100%;
   }
 
+  /* 🌙 Dark Mode — Windows 10 Dark Theme */
   .dark {
-    /* Windows 7 doesn't have dark mode, keeping consistent light theme */
-    --background: 0 0% 94%;
-    --foreground: 0 0% 15%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
-    --primary: 210 100% 55%;
+    --background: 220 13% 18%;
+    --foreground: 0 0% 90%;
+
+    --card: 220 13% 22%;
+    --card-foreground: 0 0% 90%;
+
+    --popover: 220 13% 22%;
+    --popover-foreground: 0 0% 90%;
+
+    --primary: 210 100% 60%; /* lighter blue accent */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 15%;
-    --muted: 0 0% 94%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 210 100% 55%;
+
+    --secondary: 220 13% 26%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 220 13% 24%;
+    --muted-foreground: 0 0% 75%;
+
+    --accent: 210 100% 60%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
+
+    --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 82%;
-    --input: 0 0% 100%;
-    --ring: 210 100% 55%;
-    --sidebar-background: 0 0% 97%;
-    --sidebar-foreground: 0 0% 15%;
-    --sidebar-primary: 210 100% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 100% 95%;
-    --sidebar-accent-foreground: 0 0% 15%;
-    --sidebar-border: 0 0% 82%;
-    --sidebar-ring: 210 100% 55%;
-    --win7-toolbar: 0 0% 92%;
-    --win7-address-bar: 0 0% 100%;
-    --win7-selected: 210 100% 92%;
-    --win7-hover: 210 100% 96%;
+
+    --border: 220 13% 28%;
+    --input: 220 13% 26%;
+    --ring: 210 100% 60%;
+
+    --toolbar: 220 13% 22%;
+    --address-bar: 220 13% 24%;
+    --selected: 210 100% 25%;
+    --hover: 210 100% 30%;
+
+    --sidebar-background: 220 13% 20%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-border: 220 13% 28%;
+    --sidebar-accent: 210 100% 60%;
+    --sidebar-accent-foreground: 0 0% 100%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border transition-colors duration-300;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-['Segoe_UI'];
+  }
+
+  /* Optional scrollbar styling to match Windows 10 */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground));
+    border-radius: 10px;
+    border: 2px solid hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--foreground));
   }
 }
