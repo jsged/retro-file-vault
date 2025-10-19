@@ -71,7 +71,7 @@ export const Toolbar = ({ onUpload, onCreateFolder, onDelete, selectedCount }: T
           Delete {selectedCount > 0 && `(${selectedCount})`}
         </Button>
       </div>
-      <ThemeToggle />
+      <ThemeToggle className="ml-auto" />
       <LogoutButton />
     </div>
   );
