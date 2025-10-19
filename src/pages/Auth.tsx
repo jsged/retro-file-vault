@@ -119,7 +119,7 @@ const Auth = () => {
             </div>
           </div>
 
-          {/* Banner (Windows Home Server style) */}r
+          {/* Banner (Windows Home Server style) */}
           <div className="h-20 bg-gradient-to-r from-blue-700 to-blue-500 flex items-center justify-cente">
             <img
               src="/banner.jpg"
