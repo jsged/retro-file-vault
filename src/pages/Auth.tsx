@@ -41,6 +41,7 @@ const Auth = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[hsl(200,70%,45%)] via-[hsl(200,70%,55%)] to-[hsl(200,70%,65%)] p-4">
+      <img src="/placeholder.svg" alt="Background" className="fixed inset-0 -z-10 h-full w-full object-cover opacity-10" />
       {/* Windows 7 Aero Dialog */}
       <div className="w-full max-w-md animate-scale-in">
         {/* Window Chrome */}
@@ -51,11 +52,6 @@ const Auth = () => {
             <span className="flex-1 text-sm font-semibold text-foreground">
               jsged Game FTP Access
             </span>
-            <div className="flex gap-1">
-              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsla(48, 84%, 48%, 1.00)] to-[hsla(46, 100%, 45%, 1.00)]" />
-              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsla(128, 100%, 42%, 1.00)] to-[hsla(123, 100%, 36%, 1.00)]" />
-              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsla(0, 78%, 43%, 1.00)] to-[hsla(0, 100%, 40%, 1.00)]" />
-            </div>
           </div>
 
           {/* Content Area */}
