@@ -50,19 +50,20 @@ Deno.serve(async (req) => {
           }));
           break;
           
-        case 'download':
-          // Create a temporary file for download
+        case "download":
+          // Download file to temp path
           const tempFilePath = await Deno.makeTempFile();
           await client.downloadTo(tempFilePath, path);
-          const fileContent = await Deno.readFile(tempFilePath);
-          await Deno.remove(tempFilePath);
-          
-          result = {
-            success: true,
-            content: Array.from(fileContent),
-            fileName: path.split('/').pop() || 'download',
-          };
-          break;
+
+          // Stream file directly
+          const file = await Deno.open(tempFilePath, { read: true });
+          return new Response(file.readable, {
+            headers: {
+              "Content-Disposition": `attachment; filename="${path.split("/").pop()}"`,
+              "Content-Type": "application/octet-stream",
+            },
+          });
+
           
         case 'upload':
           if (!content) {

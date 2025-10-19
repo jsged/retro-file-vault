@@ -110,33 +110,35 @@ export const FileExplorer = () => {
   const handleDownload = async (fileName: string) => {
     try {
       const fullPath = currentPath === "/" ? `/${fileName}` : `${currentPath}/${fileName}`;
-      
-      const { data, error } = await supabase.functions.invoke("ftp-operations", {
-        body: { operation: "download", path: fullPath },
+
+      const res = await fetch(`${SUPABASE_EDGE_FUNCTION_URL}`, {
+        method: "POST",
+        body: JSON.stringify({ operation: "download", path: fullPath }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-      if (error) throw error;
-      
-      // Convert array back to Uint8Array and create blob
-      const uint8Array = new Uint8Array(data.content);
-      const blob = new Blob([uint8Array]);
+      if (!res.ok) throw new Error("Failed to download file");
+
+      const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      
-      // Create download link
-      const a = document.createElement('a');
+
+      const a = document.createElement("a");
       a.href = url;
-      a.download = data.fileName;
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       toast.success("File downloaded successfully");
     } catch (error) {
       console.error("Error downloading:", error);
       toast.error("Failed to download file");
     }
   };
+
 
   useEffect(() => {
     loadDirectory("/");
