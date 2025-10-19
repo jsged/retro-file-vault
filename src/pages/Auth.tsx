@@ -110,7 +110,7 @@ const Auth = () => {
                 <Minus className="h-3 w-3 text-gray-700" />
               </button>
               <button
-                onClick={() => toast("Close button does nothing 😄")}
+                onClick={() => toast("Button Disabled")}
                 className="h-5 w-5 flex items-center justify-center rounded hover:bg-red-500/70 hover:text-white transition"
                 title="Close"
               >
@@ -136,7 +136,7 @@ const Auth = () => {
               <img
                 src="/banner-logo.png" // this is your overlay (e.g. Windows Home Server logo)
                 alt="Banner Logo"
-                className="h-12 w-auto object-contain drop-shadow-md"
+                className="h-20 w-auto object-contain drop-shadow-md"
               />
             </div>
           </div>
