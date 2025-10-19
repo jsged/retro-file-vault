@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Toolbar } from "./Toolbar";
 import { AddressBar } from "./AddressBar";
 import { FolderTree } from "./FolderTree";
@@ -14,10 +15,19 @@ export interface FileItem {
 }
 
 export const FileExplorer = () => {
+  const navigate = useNavigate();
   const [currentPath, setCurrentPath] = useState("/");
   const [files, setFiles] = useState<FileItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const isAuthenticated = sessionStorage.getItem("ftp_authenticated");
+    if (isAuthenticated !== "true") {
+      navigate("/auth");
+    }
+  }, [navigate]);
 
   const loadDirectory = async (path: string) => {
     setLoading(true);
