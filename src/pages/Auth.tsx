@@ -49,7 +49,7 @@ const Auth = () => {
           <div className="flex items-center gap-2 border-b border-white/40 bg-gradient-to-b from-white/50 to-white/30 px-3 py-2">
             <Lock className="h-4 w-4 text-primary" />
             <span className="flex-1 text-sm font-semibold text-foreground">
-              Windows Security
+              jsged Game FTP Access
             </span>
             <div className="flex gap-1">
               <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsl(0,0%,85%)] to-[hsl(0,0%,75%)]" />
@@ -66,7 +66,7 @@ const Auth = () => {
               </div>
               <div className="flex-1">
                 <h2 className="mb-2 text-lg font-semibold text-foreground">
-                  Enter your credentials
+                  Log In
                 </h2>
                 <p className="text-sm text-muted-foreground">
                   Please enter your password to access the FTP File Explorer.
