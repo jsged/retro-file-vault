@@ -119,13 +119,26 @@ const Auth = () => {
             </div>
           </div>
 
-          {/* Banner (Windows Home Server style) */}
-          <div className="h-20 bg-gradient-to-r from-blue-700 to-blue-500 flex items-center justify-cente">
-            <img
-              src="/banner.jpg"
-              alt="Server Banner"
-              className="h-20 object-contain drop-shadow-md"
-            />
+          {/* Banner (Windows Home Server style, with layered images) */}
+          <div
+            className="relative h-24 w-full overflow-hidden"
+            style={{
+              backgroundImage: "url('/banner-bg.jpg')", // this is your background image
+              backgroundSize: "cover", // makes it crop and fill the area
+              backgroundPosition: "center", // centers the image
+            }}
+          >
+            {/* Optional dark gradient overlay for text/logo contrast */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
+
+            {/* Foreground logo or overlay image */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img
+                src="/banner-logo.png" // this is your overlay (e.g. Windows Home Server logo)
+                alt="Banner Logo"
+                className="h-12 w-auto object-contain drop-shadow-md"
+              />
+            </div>
           </div>
 
           {/* Content */}
