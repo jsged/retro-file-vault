@@ -69,6 +69,12 @@ export const Toolbar = ({ onUpload, onCreateFolder, onDelete, selectedCount }: T
           <Trash2 className="h-4 w-4" />
           Delete {selectedCount > 0 && `(${selectedCount})`}
         </Button>
+        <button
+          onClick={() => document.documentElement.classList.toggle('dark')}
+          className="px-2 py-1 rounded border border-border hover:bg-muted text-sm"
+        >
+          Toggle Dark Mode
+        </button>
       </div>
       <LogoutButton />
     </div>
