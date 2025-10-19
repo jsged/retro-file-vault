@@ -52,9 +52,9 @@ const Auth = () => {
               jsged Game FTP Access
             </span>
             <div className="flex gap-1">
-              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsl(0,0%,85%)] to-[hsl(0,0%,75%)]" />
-              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsl(0,0%,85%)] to-[hsl(0,0%,75%)]" />
-              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsl(0,0%,85%)] to-[hsl(0,0%,75%)]" />
+              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsla(48, 84%, 48%, 1.00)] to-[hsla(46, 100%, 45%, 1.00)]" />
+              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsla(128, 100%, 42%, 1.00)] to-[hsla(123, 100%, 36%, 1.00)]" />
+              <div className="h-3 w-3 rounded-sm bg-gradient-to-b from-[hsla(0, 78%, 43%, 1.00)] to-[hsla(0, 100%, 40%, 1.00)]" />
             </div>
           </div>
 
