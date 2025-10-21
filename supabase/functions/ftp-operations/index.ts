@@ -17,13 +17,39 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  try {
-    const { operation, path, content, newName, ftpConfig } = await req.json();
-    console.log(`FTP operation: ${operation} at path: ${path}`);
+   try {
+     const url = new URL(req.url);
+     let operation: string | null = null;
+     let pathParam: string | null = null;
+     let content: string | undefined;
+     let newName: string | undefined;
+     let ftpConfig: any;
 
-    if (!ftpConfig || !ftpConfig.host) {
-      throw new Error('FTP configuration is required');
-    }
+     if (req.method === 'GET') {
+       operation = url.searchParams.get('operation') || url.searchParams.get('op');
+       pathParam = url.searchParams.get('path');
+       ftpConfig = {
+         host: url.searchParams.get('host') || undefined,
+         port: Number(url.searchParams.get('port') || '21'),
+         user: url.searchParams.get('user') || undefined,
+         password: url.searchParams.get('password') || undefined,
+       };
+     } else {
+       const body = await req.json();
+       operation = body.operation;
+       pathParam = body.path;
+       content = body.content;
+       newName = body.newName;
+       ftpConfig = body.ftpConfig;
+     }
+
+     const operationStr = operation || '';
+     const path = pathParam || '/';
+     console.log(`FTP operation: ${operationStr} at path: ${path}`);
+
+     if (!ftpConfig || !ftpConfig.host) {
+       throw new Error('FTP configuration is required');
+     }
 
     // Import basic-ftp dynamically
     const { Client: FTPClient } = await import("npm:basic-ftp@5.0.5");
@@ -42,7 +68,7 @@ Deno.serve(async (req) => {
       
       let result;
       
-      switch (operation) {
+      switch (operationStr) {
         case 'list':
           const items = await client.list(path || '/');
           result = items.map((item: FTPListItem) => ({
@@ -54,30 +80,42 @@ Deno.serve(async (req) => {
           break;
           
         case "download":
-          // Import Writable stream and Buffer from Node
-          const { Writable } = await import("node:stream");
-          const { Buffer } = await import("node:buffer");
-          
-          // Create a buffer to accumulate data
-          const chunks: Uint8Array[] = [];
-          const writableStream = new Writable({
-            write(chunk, encoding, callback) {
-              chunks.push(Buffer.from(chunk));
-              callback();
+          // Stream from FTP to HTTP response without buffering whole file
+          const { PassThrough } = await import("node:stream");
+          const pass = new PassThrough();
+
+          // Start FTP download into PassThrough
+          client
+            .downloadTo(pass, path)
+            .catch((err: unknown) => pass.emit('error', err as Error));
+
+          // Bridge Node stream -> Web ReadableStream
+          const readableStream = new ReadableStream<Uint8Array>({
+            start(controller) {
+              pass.on('data', (chunk) => {
+                controller.enqueue(new Uint8Array(chunk));
+              });
+              pass.on('end', () => {
+                controller.close();
+                try { client.close(); } catch (_) {}
+              });
+              pass.on('error', (err) => {
+                try { client.close(); } catch (_) {}
+                controller.error(err);
+              });
             },
+            cancel() {
+              try { pass.destroy(); } catch (_) {}
+              try { client.close(); } catch (_) {}
+            }
           });
-          
-          // Download to the writable stream
-          await client.downloadTo(writableStream, path);
-          
-          // Combine all chunks
-          const fileBuffer = Buffer.concat(chunks);
-          
-          return new Response(fileBuffer, {
+
+          return new Response(readableStream, {
             headers: {
               ...corsHeaders,
               "Content-Disposition": `attachment; filename="${path.split("/").pop()}"`,
               "Content-Type": "application/octet-stream",
+              "Cache-Control": "no-store",
             },
           });
 

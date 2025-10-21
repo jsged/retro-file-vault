@@ -119,31 +119,19 @@ export const FileExplorer = () => {
       const ftpConfig = JSON.parse(sessionStorage.getItem("ftp_config") || "{}");
 
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
-      const res = await fetch(`${supabaseUrl}/functions/v1/ftp-operations`, {
-        method: "POST",
-        body: JSON.stringify({ operation: "download", path: fullPath, ftpConfig }),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${supabaseKey}`,
-        },
+      const params = new URLSearchParams({
+        operation: "download",
+        path: fullPath,
+        host: ftpConfig.host || "",
+        port: String(ftpConfig.port || 21),
+        user: ftpConfig.user || "",
+        password: ftpConfig.password || "",
       });
 
-      if (!res.ok) throw new Error("Failed to download file");
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      toast.success("File downloaded successfully");
+      const url = `${supabaseUrl}/functions/v1/ftp-operations?${params.toString()}`;
+      // Open in a new tab to allow native browser download streaming
+      window.open(url, "_blank");
+      toast.success("Download started");
     } catch (error) {
       console.error("Error downloading:", error);
       toast.error("Failed to download file");
