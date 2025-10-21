@@ -6,7 +6,11 @@ import { toast } from "sonner";
 import { Lock, Minus, X, AlertCircle } from "lucide-react";
 
 const Auth = () => {
-  const [password, setPassword] = useState("");
+  const [host, setHost] = useState("ftp.fasthosts.co.uk");
+  const [port, setPort] = useState("21");
+  const [username, setUsername] = useState("jsged_games");
+  const [password, setPassword] = useState("gamesaresupercool");
+  const [anonymous, setAnonymous] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -59,15 +63,17 @@ const Auth = () => {
     setError(false);
 
     setTimeout(() => {
-      if (password === "jequaviousdingle") {
-        sessionStorage.setItem("ftp_authenticated", "true");
-        toast.success("Access granted");
-        navigate("/");
-      } else {
-        setError(true);
-        toast.error("Incorrect password");
-        setPassword("");
-      }
+      const ftpConfig = {
+        host,
+        port: parseInt(port),
+        user: anonymous ? "anonymous" : username,
+        password: anonymous ? "" : password,
+      };
+
+      sessionStorage.setItem("ftp_authenticated", "true");
+      sessionStorage.setItem("ftp_config", JSON.stringify(ftpConfig));
+      toast.success("Connected successfully");
+      navigate("/");
       setIsLoading(false);
     }, 800);
   };
@@ -144,18 +150,61 @@ const Auth = () => {
           {/* Content */}
           <div className="p-6">
             <div className="mb-5">
-              <h2 className="text-lg font-semibold text-gray-900">Sign in</h2>
+              <h2 className="text-lg font-semibold text-gray-900">FTP Connection</h2>
               <p className="text-sm text-gray-600">
-                Enter the password to access the file server.
+                Enter your FTP server credentials to connect.
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label htmlFor="host" className="block text-sm font-medium text-gray-700">
+                    Server Address
+                  </label>
+                  <Input
+                    id="host"
+                    type="text"
+                    value={host}
+                    onChange={(e) => setHost(e.target.value)}
+                    placeholder="ftp.example.com"
+                    className="mt-1 h-9 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-400/50"
+                    disabled={isLoading}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="port" className="block text-sm font-medium text-gray-700">
+                    Port
+                  </label>
+                  <Input
+                    id="port"
+                    type="text"
+                    value={port}
+                    onChange={(e) => setPort(e.target.value)}
+                    placeholder="21"
+                    className="mt-1 h-9 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-400/50"
+                    disabled={isLoading}
+                  />
+                </div>
+              </div>
+
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  Username
+                </label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter username"
+                  className="mt-1 h-9 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-400/50"
+                  disabled={isLoading || anonymous}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
                 <Input
@@ -170,30 +219,43 @@ const Auth = () => {
                   className={`mt-1 h-9 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-400/50 ${
                     error ? "border-red-500 ring-1 ring-red-400/50" : ""
                   }`}
-                  disabled={isLoading}
-                  autoFocus
+                  disabled={isLoading || anonymous}
                 />
                 {error && (
                   <div className="mt-2 flex items-center gap-2 text-sm text-red-600">
                     <AlertCircle className="h-4 w-4" />
-                    <span>Incorrect password. Try again.</span>
+                    <span>Connection failed. Check your credentials.</span>
                   </div>
                 )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="anonymous"
+                  checked={anonymous}
+                  onChange={(e) => setAnonymous(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  disabled={isLoading}
+                />
+                <label htmlFor="anonymous" className="text-sm font-medium text-gray-700">
+                  Anonymous login
+                </label>
               </div>
 
               <div className="flex justify-end pt-2">
                 <Button
                   type="submit"
-                  disabled={isLoading || !password}
+                  disabled={isLoading || (!anonymous && (!host || !username || !password))}
                   className="h-9 px-6 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 transition-colors"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                      Verifying...
+                      Connecting...
                     </span>
                   ) : (
-                    "Sign In"
+                    "Connect"
                   )}
                 </Button>
               </div>

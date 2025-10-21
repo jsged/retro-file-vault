@@ -32,8 +32,10 @@ export const FileExplorer = () => {
   const loadDirectory = async (path: string) => {
     setLoading(true);
     try {
+      const ftpConfig = JSON.parse(sessionStorage.getItem("ftp_config") || "{}");
+      
       const { data, error } = await supabase.functions.invoke("ftp-operations", {
-        body: { operation: "list", path },
+        body: { operation: "list", path, ftpConfig },
       });
 
       if (error) throw error;
@@ -54,11 +56,13 @@ export const FileExplorer = () => {
   };
 
   const handleDelete = async (items: string[]) => {
+    const ftpConfig = JSON.parse(sessionStorage.getItem("ftp_config") || "{}");
+    
     for (const item of items) {
       try {
         const fullPath = currentPath === "/" ? `/${item}` : `${currentPath}/${item}`;
         await supabase.functions.invoke("ftp-operations", {
-          body: { operation: "delete", path: fullPath },
+          body: { operation: "delete", path: fullPath, ftpConfig },
         });
       } catch (error) {
         console.error("Error deleting:", error);
@@ -74,13 +78,14 @@ export const FileExplorer = () => {
     try {
       const content = await file.text();
       const fullPath = currentPath === "/" ? `/${file.name}` : `${currentPath}/${file.name}`;
-      
+      const ftpConfig = JSON.parse(sessionStorage.getItem("ftp_config") || "{}");
+
       const { error } = await supabase.functions.invoke("ftp-operations", {
-        body: { operation: "upload", path: fullPath, content },
+        body: { operation: "upload", path: fullPath, content, ftpConfig },
       });
 
       if (error) throw error;
-      
+
       toast.success("File uploaded successfully");
       loadDirectory(currentPath);
     } catch (error) {
@@ -92,9 +97,10 @@ export const FileExplorer = () => {
   const handleCreateFolder = async (name: string) => {
     try {
       const fullPath = currentPath === "/" ? `/${name}` : `${currentPath}/${name}`;
+      const ftpConfig = JSON.parse(sessionStorage.getItem("ftp_config") || "{}");
       
       const { error } = await supabase.functions.invoke("ftp-operations", {
-        body: { operation: "createDir", path: fullPath },
+        body: { operation: "createDir", path: fullPath, ftpConfig },
       });
 
       if (error) throw error;
@@ -110,12 +116,17 @@ export const FileExplorer = () => {
   const handleDownload = async (fileName: string) => {
     try {
       const fullPath = currentPath === "/" ? `/${fileName}` : `${currentPath}/${fileName}`;
+      const ftpConfig = JSON.parse(sessionStorage.getItem("ftp_config") || "{}");
 
-      const res = await fetch(`${SUPABASE_EDGE_FUNCTION_URL}`, {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+      const res = await fetch(`${supabaseUrl}/functions/v1/ftp-operations`, {
         method: "POST",
-        body: JSON.stringify({ operation: "download", path: fullPath }),
+        body: JSON.stringify({ operation: "download", path: fullPath, ftpConfig }),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${supabaseKey}`,
         },
       });
 

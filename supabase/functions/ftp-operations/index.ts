@@ -5,13 +5,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// FTP configuration
-const FTP_CONFIG = {
-  host: 'ftp.fasthosts.co.uk',
-  user: 'jsged_games',
-  password: 'gamesaresupercool',
-};
-
 interface FTPListItem {
   name: string;
   type: number;
@@ -25,8 +18,12 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { operation, path, content, newName } = await req.json();
+    const { operation, path, content, newName, ftpConfig } = await req.json();
     console.log(`FTP operation: ${operation} at path: ${path}`);
+
+    if (!ftpConfig || !ftpConfig.host) {
+      throw new Error('FTP configuration is required');
+    }
 
     // Import basic-ftp dynamically
     const { Client: FTPClient } = await import("npm:basic-ftp@5.0.5");
@@ -35,7 +32,13 @@ Deno.serve(async (req) => {
     client.ftp.verbose = false;
     
     try {
-      await client.access(FTP_CONFIG);
+      await client.access({
+        host: ftpConfig.host,
+        port: ftpConfig.port || 21,
+        user: ftpConfig.user,
+        password: ftpConfig.password,
+        secure: false,
+      });
       
       let result;
       
