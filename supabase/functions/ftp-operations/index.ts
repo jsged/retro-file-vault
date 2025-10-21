@@ -54,14 +54,28 @@ Deno.serve(async (req) => {
           break;
           
         case "download":
-          // Download file to temp path
-          const tempFilePath = await Deno.makeTempFile();
-          await client.downloadTo(tempFilePath, path);
-
-          // Stream file directly
-          const file = await Deno.open(tempFilePath, { read: true });
-          return new Response(file.readable, {
+          // Import Writable stream and Buffer from Node
+          const { Writable } = await import("node:stream");
+          const { Buffer } = await import("node:buffer");
+          
+          // Create a buffer to accumulate data
+          const chunks: Uint8Array[] = [];
+          const writableStream = new Writable({
+            write(chunk, encoding, callback) {
+              chunks.push(Buffer.from(chunk));
+              callback();
+            },
+          });
+          
+          // Download to the writable stream
+          await client.downloadTo(writableStream, path);
+          
+          // Combine all chunks
+          const fileBuffer = Buffer.concat(chunks);
+          
+          return new Response(fileBuffer, {
             headers: {
+              ...corsHeaders,
               "Content-Disposition": `attachment; filename="${path.split("/").pop()}"`,
               "Content-Type": "application/octet-stream",
             },
